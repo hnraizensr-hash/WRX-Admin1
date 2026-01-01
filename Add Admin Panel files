@@ -1,3 +1,92 @@
-index.html
-style.css
-script.js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WRX Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin:0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #050508;
+      color: #fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      min-height:100vh;
+      padding:20px;
+    }
+    h1 { color:#00e5ff; }
+    .user-card {
+      background: #0e0e14;
+      padding:15px;
+      border-radius:12px;
+      margin-bottom:12px;
+      width:100%;
+      max-width:400px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .user-card.banned { border-left:4px solid #ff0055; }
+    .user-card.active { border-left:4px solid #00ff9d; }
+    button {
+      padding:6px 12px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    button.ban { background:#ff0055; color:#fff; }
+    button.unban { background:#00ff9d; color:#000; }
+    input { padding:10px; border-radius:6px; border:none; margin-top:10px; width:100%; max-width:400px; }
+  </style>
+</head>
+<body>
+
+  <h1>WRX Admin Panel</h1>
+
+  <div id="users"></div>
+
+  <input type="text" id="customMsg" placeholder="Type custom message">
+  <button onclick="sendMsg()">Send Message</button>
+
+  <script>
+    let users = [
+      {name:"User1", banned:false, expiry:"10/01/2026"},
+      {name:"User2", banned:true, expiry:"15/01/2026"},
+      {name:"User3", banned:false, expiry:"20/01/2026"}
+    ];
+
+    function renderUsers() {
+      const container = document.getElementById('users');
+      container.innerHTML = '';
+      users.forEach((u,i)=>{
+        const card = document.createElement('div');
+        card.className = 'user-card ' + (u.banned ? 'banned' : 'active');
+        card.innerHTML = `<span>${u.name} | Expiry: ${u.expiry} | ${u.banned?'BANNED':'ACTIVE'}</span>`;
+        const btn = document.createElement('button');
+        btn.textContent = u.banned?'Unban':'Ban';
+        btn.className = u.banned?'unban':'ban';
+        btn.onclick = ()=>{
+          u.banned = !u.banned;
+          renderUsers();
+          alert(u.name + ' is now ' + (u.banned?'BANNED':'ACTIVE'));
+        }
+        card.appendChild(btn);
+        container.appendChild(card);
+      });
+    }
+
+    function sendMsg() {
+      const msg = document.getElementById('customMsg').value;
+      if(msg) alert("Message sent: " + msg);
+    }
+
+    renderUsers();
+  </script>
+
+</body>
+</html>
